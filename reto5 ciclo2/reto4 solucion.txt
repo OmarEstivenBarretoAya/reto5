@@ -1,0 +1,450 @@
+/*
+ * Pueda usar esta plantilla para la carga del reto a iMaster
+ * Copie las clases de los paquetes Modelo, Vista, Controlador y Util
+ * No incluya los import de los archivos .java solo las clases
+ */
+// Importaciones necesarias en iMaster
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.PreparedStatement;
+import java.util.ArrayList;
+
+// Util (No modificar)
+class JDBCUtilities {
+    private static final String DATABASE_LOCATION = "ProyectosConstruccion.db";
+
+    public static Connection getConnection() throws SQLException {
+        String url = "jdbc:sqlite:"+DATABASE_LOCATION;
+
+        return DriverManager.getConnection(url);
+    }
+}
+
+// Remplace en adelante por las clases de sus archivos .java
+
+// Vista
+class VistaRequerimientosReto4 {
+
+    public static final controladorRequerimientosReto4 controlador = new controladorRequerimientosReto4();
+
+    public static void requerimiento1(){
+    
+        System.out.println("*** Proyectos por Estrato ***");
+
+        try{
+
+            ArrayList<Requerimiento1> rankingRequerimiento1 = controlador.consultarRequerimiento1();
+
+            for (Requerimiento1 requerimiento1 : rankingRequerimiento1){
+
+                System.out.printf("El proyecto de ID_Tipo %d de codigo: %d de Area Maxima %d, tiene un estrato %d %n",
+                    requerimiento1.getID_Tipo(),
+                    requerimiento1.getCodigo_Tipo(),
+                    requerimiento1.getArea_Maxima(),
+                    requerimiento1.getEstrato());
+            }
+
+        }catch(SQLException e){
+            System.err.println("Ha ocurrido un error!"+e.getMessage());
+        }
+    }
+
+    public static void requerimiento2(){
+    
+        System.out.println("*** Proyectos por Tipo ***");
+
+        try{
+
+            ArrayList<Requerimiento2> rankingRequerimiento2 = controlador.consultarRequerimiento2();
+
+            for (Requerimiento2 requerimiento2 : rankingRequerimiento2){
+
+                System.out.printf("El proyecto de ID_Proyecto %d de la constructora: %s de la ciudad %s, tiene un estrato asignado de %d %n",
+                    requerimiento2.getID_Proyecto(),
+                    requerimiento2.getConstructora(),
+                    requerimiento2.getCiudad(),
+                    requerimiento2.getEstrato());
+            }
+           
+        }catch(SQLException e){
+            System.err.println("Ha ocurrido un error!"+e.getMessage());
+        }
+    }
+
+    public static void requerimiento3(){
+
+        System.out.println("*** Proyectos de Tipo Apartaestudio en Quibdo ***");
+
+        try{
+
+            ArrayList<Requerimiento3> rankingRequerimiento3 = controlador.consultarRequerimiento3();
+
+            for (Requerimiento3 requerimiento3 : rankingRequerimiento3){
+
+                System.out.printf("El proyecto de ID_Proyecto %d de la constructora: %s tiene un porcentaje de cuota inicial de %.1f, y %s tiene acabados %n",
+                    requerimiento3.getID_Proyecto(),
+                    requerimiento3.getConstructora(),
+                    requerimiento3.getPorcentaje_Cuota_Inicial(),
+                    requerimiento3.getAcabados());
+            }
+
+            
+        
+        }catch(SQLException e){
+            System.err.println("Ha ocurrido un error!"+e.getMessage());
+        }
+    }
+    
+}
+
+// Controlador
+class controladorRequerimientosReto4 {
+
+    private final Requerimiento_1Dao Requerimiento_1Dao;
+    private final Requerimiento_2Dao Requerimiento_2Dao;
+    private final Requerimiento_3Dao Requerimiento_3Dao;
+    
+    public controladorRequerimientosReto4(){
+        
+        this.Requerimiento_1Dao = new Requerimiento_1Dao();
+        this.Requerimiento_2Dao = new Requerimiento_2Dao();
+        this.Requerimiento_3Dao = new Requerimiento_3Dao();
+    }
+
+    public ArrayList <Requerimiento1> consultarRequerimiento1() throws SQLException {
+
+        return this.Requerimiento_1Dao.rankingRequerimiento1();
+
+    }
+    
+    public ArrayList <Requerimiento2> consultarRequerimiento2() throws SQLException {
+
+        return this.Requerimiento_2Dao.rankingRequerimiento2();
+
+    }
+
+    public ArrayList <Requerimiento3> consultarRequerimiento3() throws SQLException {
+        
+        return this.Requerimiento_3Dao.rankingRequerimiento3();
+
+    }
+    
+}
+
+// Modelo
+// VO
+class Requerimiento1 {
+
+private Integer ID_Tipo;
+    private Integer Codigo_Tipo;
+    private Integer Area_Max;
+    private Integer Estrato;
+
+    public Requerimiento1() {
+    }
+
+    public Requerimiento1(Integer id_tipo, Integer codigo_tipo, Integer area_max, Integer estrato) {
+        this.ID_Tipo = id_tipo;
+        this.Codigo_Tipo = codigo_tipo;
+        this.Area_Max = area_max;
+        this.Estrato = estrato;
+    }
+
+    
+    public Integer getID_Tipo() {
+        return ID_Tipo;
+    }
+
+    public void setID_Tipo(Integer id_tipo) {
+        this.ID_Tipo = id_tipo;
+    }
+
+    public Integer getCodigo_Tipo() {
+        return Codigo_Tipo;
+    }
+
+    public void setCodigo_Tipo(Integer codigo_tipo) {
+        this.Codigo_Tipo = codigo_tipo;
+    }
+
+    public Integer getArea_Maxima() {
+        return Area_Max;
+    }
+
+    public void setArea_Maxima(Integer area_max) {
+        this.Area_Max = area_max;
+    }
+
+    public Integer getEstrato() {
+        return Estrato;
+    }
+
+    public void setEstrato(Integer estrato) {
+        this.Estrato = estrato;
+    }
+
+}
+
+class Requerimiento2 {
+
+    private Integer ID_Proyecto;
+    private String Constructora;
+    private String Ciudad;
+    private Integer Estrato;
+
+    public Requerimiento2() {
+    }
+
+    public Requerimiento2(Integer id_proyecto, String constructora, String ciudad, Integer estrato) {
+        this.ID_Proyecto = id_proyecto;
+        this.Constructora = constructora;
+        this.Ciudad = ciudad;
+        this.Estrato = estrato;
+    }
+
+    
+    public Integer getID_Proyecto() {
+        return ID_Proyecto;
+    }
+
+    public void setID_Proyecto(Integer id_proyecto) {
+        this.ID_Proyecto = id_proyecto;
+    }
+
+    public String getConstructora() {
+        return Constructora;
+    }
+
+    public void setConstructora(String constructora) {
+        this.Constructora = constructora;
+    }
+
+    public String getCiudad() {
+        return Ciudad;
+    }
+
+    public void setCiudad(String ciudad) {
+        this.Ciudad = ciudad;
+    }
+
+    public Integer getEstrato() {
+        return Estrato;
+    }
+
+    public void setEstrato(Integer estrato) {
+        this.Estrato = estrato;
+    }
+
+}
+
+class Requerimiento3 {
+
+private Integer ID_Proyecto;
+    private String Constructora;
+    private Float Porcentaje_Cuota_Inicial;
+    private String Acabados;
+
+    public Requerimiento3() {
+    }
+
+    public Requerimiento3(Integer id_proyecto, String constructora, Float porcentaje_cuota_inicial, String acabados) {
+        this.ID_Proyecto = id_proyecto;
+        this.Constructora = constructora;
+        this.Porcentaje_Cuota_Inicial = porcentaje_cuota_inicial;
+        this.Acabados = acabados;
+    }
+
+    
+    public Integer getID_Proyecto() {
+        return ID_Proyecto;
+    }
+
+    public void setID_Proyecto(Integer id_proyecto) {
+        this.ID_Proyecto = id_proyecto;
+    }
+
+    public String getConstructora() {
+        return Constructora;
+    }
+
+    public void setConstructora(String constructora) {
+        this.Constructora = constructora;
+    }
+
+    public Float getPorcentaje_Cuota_Inicial() {
+        return Porcentaje_Cuota_Inicial;
+    }
+
+    public void setPorcentaje_Cuota_Inicial(Float porcentaje_cuota_inicial) {
+        this.Porcentaje_Cuota_Inicial = porcentaje_cuota_inicial;
+    }
+
+    public String getAcabados() {
+        return Acabados;
+    }
+
+    public void setAcabados(String acabados) {
+        this.Acabados = acabados;
+    }
+
+}
+
+// DAO
+class Requerimiento_1Dao {
+
+//Obtener los proyectos por Estrato 5 o 6
+    public ArrayList<Requerimiento1> rankingRequerimiento1() throws SQLException {
+
+        ArrayList<Requerimiento1> respuesta = new ArrayList<Requerimiento1>();
+        Connection conexion = JDBCUtilities.getConnection();
+
+        try{       
+
+            String consulta =   "SELECT Id_Tipo, Codigo_Tipo, Area_Max, Estrato "+
+                                "FROM Tipo "+
+                                "WHERE Estrato = 5 OR Estrato = 6 "+
+                                "ORDER BY Estrato ";
+
+            PreparedStatement statement = conexion.prepareStatement(consulta);
+            ResultSet resultSet = statement.executeQuery();
+
+            //Recorrer los registros en los VO específicos
+
+            while(resultSet.next()){
+
+                Requerimiento1 Requerimiento1 = new Requerimiento1();
+                Requerimiento1.setID_Tipo(resultSet.getInt("Id_Tipo"));
+                Requerimiento1.setCodigo_Tipo(resultSet.getInt("Codigo_Tipo"));
+                Requerimiento1.setArea_Maxima(resultSet.getInt("Area_Max"));
+                Requerimiento1.setEstrato(resultSet.getInt("Estrato"));
+
+                //Se agrega cada registro como un objeto del ArrayList que contiene la consulta
+                respuesta.add(Requerimiento1);
+            }
+
+            resultSet.close();
+            statement.close();
+
+        }catch(SQLException e){
+            System.err.println("Error consultando los proyectos por Estrato: "+e.getMessage());
+        }
+
+        finally{
+
+            if(conexion != null){
+                conexion.close();
+            }
+
+        }
+
+        return respuesta;
+
+    }
+
+}
+
+class Requerimiento_2Dao {
+
+public ArrayList<Requerimiento2> rankingRequerimiento2() throws SQLException {
+        
+        ArrayList<Requerimiento2> respuesta = new ArrayList<Requerimiento2>();
+        Connection conexion = JDBCUtilities.getConnection();
+
+        try{
+
+            String consulta =   "SELECT ID_Proyecto, Constructora, Ciudad, Estrato "+
+                                "FROM Proyecto "+
+                                "NATURAL JOIN Tipo "+
+                                "WHERE Ciudad = 'Monteria'";
+
+            PreparedStatement statement = conexion.prepareStatement(consulta);
+            ResultSet resultSet = statement.executeQuery();
+
+            //Recorrer los registros en los VO específicos
+
+            while(resultSet.next()){
+
+                Requerimiento2 Requerimiento2 = new Requerimiento2();
+                Requerimiento2.setID_Proyecto(resultSet.getInt("ID_Proyecto"));
+                Requerimiento2.setConstructora(resultSet.getString("Constructora"));
+                Requerimiento2.setCiudad(resultSet.getString("Ciudad"));
+                Requerimiento2.setEstrato(resultSet.getInt("Estrato"));
+
+                //Se agrega cada registro como un objeto del ArrayList que contiene la consulta
+                respuesta.add(Requerimiento2);
+            }
+
+            resultSet.close();
+            statement.close();
+            
+        }catch(SQLException e){
+            System.err.println("Error consultando los proyectos por ID_Proyecto: "+e.getMessage());
+        }
+
+        finally{
+
+            if(conexion != null){
+                conexion.close();
+            }
+
+        }
+
+        return respuesta;
+
+    }
+
+}
+
+class Requerimiento_3Dao {
+
+public ArrayList<Requerimiento3> rankingRequerimiento3() throws SQLException {
+        
+        ArrayList<Requerimiento3> respuesta = new ArrayList<Requerimiento3>();
+        Connection conexion = JDBCUtilities.getConnection();
+
+        try{
+
+            String consulta =   "SELECT ID_Proyecto, Constructora, Porcentaje_Cuota_Inicial, Acabados "+
+                                "FROM Proyecto "+
+                                "NATURAL JOIN Tipo "+
+                                "WHERE Ciudad == 'Quibdo' AND Clasificacion == 'Apartaestudio'";
+
+            PreparedStatement statement = conexion.prepareStatement(consulta);
+            ResultSet resultSet = statement.executeQuery();
+
+            //Recorrer los registros en los VO específicos
+
+            while(resultSet.next()){
+
+                Requerimiento3 Requerimiento3 = new Requerimiento3();
+                Requerimiento3.setID_Proyecto(resultSet.getInt("ID_Proyecto"));
+                Requerimiento3.setConstructora(resultSet.getString("Constructora"));
+                Requerimiento3.setPorcentaje_Cuota_Inicial(resultSet.getFloat("Porcentaje_Cuota_Inicial"));
+                Requerimiento3.setAcabados(resultSet.getString("Acabados"));
+
+                //Se agrega cada registro como un objeto del ArrayList que contiene la consulta
+                respuesta.add(Requerimiento3);
+            }
+
+            resultSet.close();
+            statement.close();
+            
+        }catch(SQLException e){
+            System.err.println("Error consultando los proyectos por ID_Proyecto: "+e.getMessage());
+        }
+
+        finally{
+
+            if(conexion != null){
+                conexion.close();
+            }
+
+        }
+
+        return respuesta;
+
+    }
+
+}
